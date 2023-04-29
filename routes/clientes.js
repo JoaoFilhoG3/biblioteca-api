@@ -1,5 +1,3 @@
-"use strict";
-
 var express = require("express");
 var clienteController = require("../controller/ClienteController");
 var router = express.Router();

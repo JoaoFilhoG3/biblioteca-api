@@ -1,5 +1,3 @@
-
-
 var connection = require("../bd/connection.js");
 
 class ClienteController {

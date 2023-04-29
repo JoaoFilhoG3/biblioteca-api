@@ -1,22 +1,11 @@
-"use strict";
-
 var express = require("express");
+var livroController = require("../controller/LivroController");
 var router = express.Router();
 
-router.get("/", function (request, response) {
-    response.send("Obtendo todos os livros!");
-});
-
-router.post("/", function (request, response) {
-
-}); 
-
-router.put("/", function (request, response) {
-
-});
-
-router.delete("/", function (request, response) {
-
-});
+router.get("/", livroController.getAll);
+router.get("/:_id", livroController.getById);
+router.post("/", livroController.add);
+router.put("/:_id", livroController.update);
+router.delete("/:_id", livroController.delete);
 
 module.exports = router;
