@@ -6,11 +6,14 @@ class LivroController {
     * do banco de dados.
     */
     getAll(request, response) {
-        const sql = "SELECT * FROM livro";
+        const sql = "SELECT *, c.nome as categoria FROM livro l INNER JOIN categoria c on (l.cod_cat = c.cod_cat)";
         connection.query(sql, (err, data) => {
             if (err) {
                 response.json({ "erro": "Erro ao obter livros." });
             } else {
+                data.map((livro)=>{
+                    livro["categoria"] = {"cod_cat":livro["cod_cat"], "nome":livro["categoria"]}
+                });
                 response.json(data);
             }
         });
