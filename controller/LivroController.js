@@ -6,13 +6,24 @@ class LivroController {
     * do banco de dados.
     */
     getAll(request, response) {
-        const sql = "SELECT *, c.nome as categoria FROM livro l INNER JOIN categoria c on (l.cod_cat = c.cod_cat)";
+        const sql = "SELECT l.cod_liv, l.nome, l.ano_publicacao, " +
+            "l.num_paginas, l.num_exemplares, l.autor, " +
+            "c.cod_cat, c.nome as categoria " +
+            "FROM livro l " +
+            "INNER JOIN categoria c " +
+            "ON (l.cod_cat = c.cod_cat);";
+
         connection.query(sql, (err, data) => {
             if (err) {
+                console.log(err);
                 response.json({ "erro": "Erro ao obter livros." });
             } else {
                 data.map((livro)=>{
-                    livro["categoria"] = {"cod_cat":livro["cod_cat"], "nome":livro["categoria"]}
+                    livro["categoria"] = {
+                        "cod_cat": livro["cod_cat"],
+                        "nome": livro["categoria"]
+                    }
+                    delete livro["cod_cat"]
                 });
                 response.json(data);
             }
@@ -26,15 +37,31 @@ class LivroController {
     getById(request, response) {
         const id = request.params["_id"];
         if (id) {
-            const sql = "SELECT * FROM livro WHERE cod_cli = ?;";
+            const sql = "SELECT l.cod_liv, l.nome, l.ano_publicacao, " +
+            "l.num_paginas, l.num_exemplares, l.autor, " +
+            "c.cod_cat, c.nome as categoria " +
+            "FROM livro l " +
+            "INNER JOIN categoria c " +
+            "ON (l.cod_cat = c.cod_cat) "+
+            "WHERE l.cod_liv = ?;";
+            
             const params = [
                 id
             ];
             connection.query(sql, params, (err, data) => {
                 if (err) {
+                    console.log(err)
                     response.json({ "erro": "Erro ao obter o livro." });
                 } else {
-                    response.json(data[0]
+                    const livro = data[0];
+                    if(livro){
+                        livro["categoria"] = {
+                            "cod_cat": livro["cod_cat"],
+                            "nome": livro["categoria"]
+                        }
+                        delete livro["cod_cat"]
+                    }
+                    response.json(livro
                         ??
                         { "erro": "Não existe livro com esse código." });
                 }
@@ -163,18 +190,18 @@ class LivroController {
         // se não está vazio
         ////////////////////
         const id = request.params["_id"];
-        if(id){
+        if (id) {
             const sql = "DELETE FROM livro WHERE cod_liv = ?;";
             const values = [
                 id
             ];
 
-            connection.query(sql, values, (err, data)=>{
-                if(err){
-                    response.json({"erro":"Erro ao apagar livro."});
+            connection.query(sql, values, (err, data) => {
+                if (err) {
+                    response.json({ "erro": "Erro ao apagar livro." });
                     console.log(err);
-                }else{
-                    response.json({"mensagem":"Livro removido com sucesso."});
+                } else {
+                    response.json({ "mensagem": "Livro removido com sucesso." });
                 }
             });
         }
