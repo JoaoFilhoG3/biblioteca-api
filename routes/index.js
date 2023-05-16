@@ -14,5 +14,13 @@ router.get("/", function (request, response) {
 router.use("/clientes", require("./clientes.js"));
 //Livros
 router.use("/livros", require("./livros.js"));
+//Categorias
+router.use("/categorias", require("./categorias.js"));
+//Funcionarios
+router.use("/funcionarios", require("./funcionarios.js"));
+//Emprestimos
+router.use("/emprestimos", require("./emprestimos.js"));
+//Itens Emprestimo
+router.use("/itens_emprestimo", require("./itens_emprestimos.js"));
 
 module.exports = router;
